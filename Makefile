@@ -4,4 +4,4 @@ build:
 	protostar build
 
 test:
-	protostar test src/ -m '.*$(match).*'
+	protostar test tests/ -m '.*$(match).*'
