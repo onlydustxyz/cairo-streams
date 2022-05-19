@@ -5,6 +5,6 @@ protostar_version = "0.2.0"
 libs_path = "lib"
 
 ["protostar.contracts"]
-main = [
-    "./src/main.cairo",
+stream = [
+    "./src/stream.cairo",
 ]
