@@ -35,7 +35,7 @@ namespace stream:
         return reduce_internal.reduce_loop(func_pc, array_len, array, 0)
     end
 
-    # The reduce() method executes a "reducer" callback function on each element of the array.
+    # The filter() method executes a "filtering" callback function on each element of the array and keep only the elements that match.
     # The callback function must have this signature exactly (including implicit params): func whatever(initial_value : felt, el : felt) -> (res : felt)
     func filter{range_check_ptr}(
         func_label_value : codeoffset, array_len : felt, array : felt*
