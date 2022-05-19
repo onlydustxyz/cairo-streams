@@ -4,6 +4,8 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.registers import get_fp_and_pc
 
+# The foreach() method executes a provided function once for each array element.
+# The provided function must have this signature exactly (including implicit params): func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(el : felt)
 func foreach{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     func_pc : felt, array_len : felt, array : felt*
 ):
@@ -13,7 +15,6 @@ func foreach{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     let el = array[0]
 
     # Put function arguments in appropriate memory cells
-    [ap] = func_pc; ap++
     [ap] = syscall_ptr; ap++
     [ap] = pedersen_ptr; ap++
     [ap] = range_check_ptr; ap++
