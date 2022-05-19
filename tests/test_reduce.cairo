@@ -25,8 +25,7 @@ func test_reduce{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_p
 end
 
 func sum{pc}(initial_value : felt, el : felt) -> (res : felt):
-    let fp_and_pc = get_fp_and_pc()
-    let pc = fp_and_pc.pc_val
+    let (_, pc) = get_fp_and_pc()
 
     let res = initial_value + el
     return (res)

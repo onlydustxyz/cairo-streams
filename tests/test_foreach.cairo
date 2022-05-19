@@ -31,8 +31,7 @@ func test_foreach{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_
 end
 
 func inc_counter{pc, syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(el : felt):
-    let fp_and_pc = get_fp_and_pc()
-    let pc = fp_and_pc.pc_val
+    let (_, pc) = get_fp_and_pc()
 
     let (count) = counter.read()
     counter.write(count + el)
