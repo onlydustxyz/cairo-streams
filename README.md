@@ -1,5 +1,5 @@
 <div align="center">
-  <h1 align="center">StarKonquest</h1>
+  <h1 align="center">Cairo Streams</h1>
   <p align="center">
     <a href="http://makeapullrequest.com">
       <img alt="pull requests welcome badge" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat">
@@ -13,7 +13,7 @@
             alt="License"></a>            
   </p>
   
-  <h3 align="center">Streams library written in pure Cairo, for StarkNet</h3>
+  <h3 align="center">Array stream library written in pure Cairo</h3>
 </div>
 
 ## Usage
@@ -23,6 +23,8 @@
 > This repo contains highly experimental code.
 > Expect rapid iteration.
 > **Use at your own risk.**
+
+As this library is written in pure Cairo, without hint, you can use it in your StarkNet contracts without any issue.
 
 ### Set up the project
 
