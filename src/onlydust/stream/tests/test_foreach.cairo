@@ -2,7 +2,7 @@
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
-from src.stream import stream
+from onlydust.stream.library import stream
 
 @storage_var
 func counter() -> (count : felt):
