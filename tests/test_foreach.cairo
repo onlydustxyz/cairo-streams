@@ -19,9 +19,7 @@ func test_foreach{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_
     assert array[2] = 1
     assert array[3] = 7
 
-    let (inc_counter_func) = get_label_location(inc_counter)
-
-    foreach(inc_counter_func, 4, array)
+    foreach(inc_counter, 4, array)
 
     let (count) = counter.read()
     assert count = 10

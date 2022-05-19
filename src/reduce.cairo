@@ -2,11 +2,12 @@
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
-from starkware.cairo.common.registers import get_fp_and_pc
+from starkware.cairo.common.registers import get_label_location
 
 # The reduce() method executes a "reducer" callback function on each element of the array.
 # The callback function must have this signature exactly (including implicit params): func whatever(initial_value : felt, el : felt) -> (res : felt)
-func reduce(func_pc : felt, array_len : felt, array : felt*) -> (res : felt):
+func reduce(func_label_value : codeoffset, array_len : felt, array : felt*) -> (res : felt):
+    let (func_pc) = get_label_location(func_label_value)
     return reduce_loop(func_pc, array_len, array, 0)
 end
 

@@ -2,12 +2,20 @@
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
-from starkware.cairo.common.registers import get_fp_and_pc
+from starkware.cairo.common.registers import get_label_location
 
 # The foreach() method executes a provided function once for each array element.
 # The provided function must have this signature exactly (including implicit params): func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(el : felt)
 func foreach{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    func_pc : felt, array_len : felt, array : felt*
+    func_label_value : codeoffset, array_len : felt, array : felt*
+):
+    let (func_pc) = get_label_location(func_label_value)
+    foreach_loop(func_pc, array_len, array)
+    return ()
+end
+
+func foreach_loop{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    func_pc, array_len : felt, array : felt*
 ):
     if array_len == 0:
         return ()
@@ -29,6 +37,6 @@ func foreach{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     let range_check_ptr = [ap - 1]
 
     # Process next element
-    foreach(func_pc, array_len - 1, array + 1)
+    foreach_loop(func_pc, array_len - 1, array + 1)
     return ()
 end

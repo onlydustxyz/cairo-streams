@@ -15,9 +15,7 @@ func test_reduce{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_p
     assert array[2] = 1
     assert array[3] = 7
 
-    let (sum_func) = get_label_location(sum)
-
-    let (res) = reduce(sum_func, 4, array)
+    let (res) = reduce(sum, 4, array)
     assert res = 10
 
     return ()
