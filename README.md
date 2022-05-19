@@ -37,9 +37,6 @@ As this library is written in pure Cairo, without hint, you can use it in your S
 
 ```bash
 protostar install
-python -m venv env
-source env/bin/activate
-pip install -r requirements.txt
 ```
 
 ### ⛏️ Compile

@@ -1,0 +1,17 @@
+name: Formatting
+
+on: push
+
+jobs:
+  cairo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: "3.9"
+          cache: "pip"
+      - name: Install dependencies
+        run: pip install cairo-lang==0.8.2.1
+      - name: Check files formatting
+        run: cairo-format -c src/*.cairo
