@@ -3,7 +3,7 @@
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.math import unsigned_div_rem
-from src.stream import stream
+from onlydust.stream.library import stream
 
 @view
 func test_filter{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():

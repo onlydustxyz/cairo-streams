@@ -2,8 +2,8 @@
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
-from src.stream import stream
-from tests.test_helper import sum_from_another_file, my_namespace
+from onlydust.stream.library import stream
+from onlydust.stream.tests.test_helper import sum_from_another_file, my_namespace
 
 @view
 func test_reduce{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():

@@ -3,9 +3,9 @@
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.registers import get_label_location
-from src.foreach import foreach_internal
-from src.reduce import reduce_internal
-from src.filter import filter_internal
+from onlydust.stream.internal.foreach import foreach_internal
+from onlydust.stream.internal.reduce import reduce_internal
+from onlydust.stream.internal.filter import filter_internal
 
 namespace stream:
     # The foreach() method executes a provided function once for each array element.

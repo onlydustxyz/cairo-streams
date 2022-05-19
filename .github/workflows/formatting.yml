@@ -14,4 +14,4 @@ jobs:
       - name: Install dependencies
         run: pip install cairo-lang==0.8.2.1
       - name: Check files formatting
-        run: cairo-format -c src/*.cairo
+        run: cairo-format -c src/onlydust/stream/**/*.cairo src/onlydust/stream/*.cairo
