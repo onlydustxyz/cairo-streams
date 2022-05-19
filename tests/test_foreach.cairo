@@ -2,7 +2,6 @@
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
-from starkware.cairo.common.registers import get_label_location
 from src.foreach import foreach, foreach_struct
 
 @storage_var
