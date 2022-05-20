@@ -7,10 +7,10 @@
     <a href="https://twitter.com/intent/follow?screen_name=onlydust_xyz">
         <img src="https://img.shields.io/twitter/follow/onlydust_xyz?style=social&logo=twitter"
             alt="follow on Twitter"></a>
-    <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"
+    <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-green"
             alt="License"></a>
     <a href=""><img src="https://img.shields.io/badge/semver-0.0.1-blue"
-            alt="License"></a>            
+            alt="Version"></a>            
   </p>
   
   <h3 align="center">Array stream library written in pure Cairo</h3>
