@@ -36,7 +36,7 @@ namespace stream:
     end
 
     # The filter() method executes a "filtering" callback function on each element of the array and keep only the elements that match.
-    # The callback function must have this signature exactly (including implicit params): func whatever(initial_value : felt, el : felt) -> (res : felt)
+    # The callback function must have this signature exactly (including implicit params): func whatever{range_check_ptr}(initial_value : felt, el : felt) -> (res : felt)
     func filter{range_check_ptr}(
         func_label_value : codeoffset, array_len : felt, array : felt*
     ) -> (filtered_array_len : felt, filtered_array : felt*):
