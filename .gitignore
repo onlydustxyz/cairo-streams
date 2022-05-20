@@ -7,6 +7,8 @@
 # Python
 __pycache__
 env
+dist
+*.egg-info
 
 # Protostar
 build
