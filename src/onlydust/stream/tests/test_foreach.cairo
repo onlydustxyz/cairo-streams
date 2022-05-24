@@ -34,13 +34,12 @@ func test_foreach_custom_implicits{
 
     let plop = 40
 
-    let implicit_params_len = 4
-    tempvar implicit_params : felt* = new (syscall_ptr, pedersen_ptr, range_check_ptr, plop)
+    tempvar implicit_arguments = stream.ImplicitArguments(4, new (syscall_ptr, pedersen_ptr, range_check_ptr, plop))
 
-    with implicit_params_len, implicit_params:
-        stream.foreach(function=inc_counter, array_len=4, array=array, element_size=1)
+    with implicit_arguments:
+        stream.foreach(inc_counter, 4, array, 1)
         stream.update_3_builtins()
-        assert 44 = implicit_params[3]
+        assert 44 = implicit_arguments.args[3]
     end
 
     let (count) = counter.read()
