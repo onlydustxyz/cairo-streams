@@ -2,7 +2,7 @@
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
-from onlydust.stream.library import stream
+from onlydust.stream.common_implicits import stream
 from onlydust.stream.tests.test_helper import sum_from_another_file, my_namespace
 
 @view
