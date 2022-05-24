@@ -8,45 +8,43 @@ from starkware.cairo.common.memcpy import memcpy
 from starkware.cairo.common.alloc import alloc
 
 namespace foreach_internal:
-    namespace custom_implicits:
-        func foreach_loop(
-            func_pc : felt,
-            array_len : felt,
-            array : felt*,
-            index : felt,
-            element_size : felt,
-            implicit_params_len : felt,
-            implicit_params : felt*,
-        ) -> (implicit_params : felt*):
-            alloc_locals
-            if index == array_len:
-                return (implicit_params)
-            end
-
-            # Put function arguments in appropriate memory cells
-            let (local args : felt*) = alloc()
-            memcpy(args, implicit_params, implicit_params_len)
-            assert args[implicit_params_len] = index
-            assert args[implicit_params_len + 1] = cast(array, felt)
-
-            # Call the function
-            invoke_internal(func_pc, implicit_params_len + 2, args)
-
-            # Update implicit parameters
-            let (ap_val) = get_ap()
-            let implicit_params : felt* = cast(ap_val - implicit_params_len, felt*)
-
-            # Process next element
-            return foreach_loop(
-                func_pc,
-                array_len,
-                array + element_size,
-                index + 1,
-                element_size,
-                implicit_params_len,
-                implicit_params,
-            )
+    func foreach_loop(
+        func_pc : felt,
+        array_len : felt,
+        array : felt*,
+        index : felt,
+        element_size : felt,
+        implicit_params_len : felt,
+        implicit_params : felt*,
+    ) -> (implicit_params : felt*):
+        alloc_locals
+        if index == array_len:
+            return (implicit_params)
         end
+
+        # Put function arguments in appropriate memory cells
+        let (local args : felt*) = alloc()
+        memcpy(args, implicit_params, implicit_params_len)
+        assert args[implicit_params_len] = index
+        assert args[implicit_params_len + 1] = cast(array, felt)
+
+        # Call the function
+        invoke_internal(func_pc, implicit_params_len + 2, args)
+
+        # Update implicit parameters
+        let (ap_val) = get_ap()
+        let implicit_params : felt* = cast(ap_val - implicit_params_len, felt*)
+
+        # Process next element
+        return foreach_loop(
+            func_pc,
+            array_len,
+            array + element_size,
+            index + 1,
+            element_size,
+            implicit_params_len,
+            implicit_params,
+        )
     end
 
     namespace no_implicits:
