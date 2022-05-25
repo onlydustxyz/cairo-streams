@@ -66,7 +66,7 @@ func test_reduce_with_sum_from_another_namespace{
     assert array[3] = 7
 
     let (res) = stream.reduce(my_namespace.sum_from_another_namespace, 4, array)
-    assert res = 10
+    assert 10 = res
 
     return ()
 end
@@ -88,8 +88,8 @@ func test_reduce_struct{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_
     let (res : Foo*) = stream.reduce_struct(
         function=sum_foo, array_len=4, array=array, element_size=Foo.SIZE
     )
-    assert res.x = 11
-    assert res.y = 110
+    assert 11 = res.x
+    assert 110 = res.y
 
     # Reading a storage var will fail if builtins haven't been properly updated
     let (dummy) = dumb.read()
