@@ -3,17 +3,9 @@
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.registers import get_label_location
-from onlydust.stream.internal.reduce import reduce_internal
 from onlydust.stream.internal.filter import filter_internal
 
 namespace stream:
-    # The reduce() method executes a "reducer" callback function on each element of the array.
-    # The callback function must have this signature exactly (including implicit params): func whatever(initial_value : felt, el : felt) -> (res : felt)
-    func reduce(func_label_value : codeoffset, array_len : felt, array : felt*) -> (res : felt):
-        let (func_pc) = get_label_location(func_label_value)
-        return reduce_internal.reduce_loop(func_pc, array_len, array, 0)
-    end
-
     # The filter() method executes a "filtering" callback function on each element of the array and keep only the elements that match.
     # The callback function must have this signature exactly (including implicit params): func whatever{range_check_ptr}(initial_value : felt, el : felt) -> (res : felt)
     func filter{range_check_ptr}(

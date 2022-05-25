@@ -2,6 +2,7 @@
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from onlydust.stream.foreach import generic
+from onlydust.stream.reduce import generic as generic_reduce
 
 # --------------------------------------------------------------------------------------------------------
 # This file contains default implementations for foreach, map, reduce and filter functions.
@@ -45,5 +46,27 @@ namespace stream:
         let pedersen_ptr = implicit_args.pedersen_ptr
         let range_check_ptr = implicit_args.range_check_ptr
         return ()
+    end
+
+    # The reduce() method executes a "reducer" callback function on each element of the array.
+    # The callback function must have this signature exactly (including implicit params): func whatever(initial_value : felt, el : felt) -> (res : felt)
+    func reduce{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        function : codeoffset, array_len : felt, array : felt*
+    ) -> (res : felt):
+        # prepare implicit arguments
+        let implicit_args_len = reduce.ImplicitArgs.SIZE
+        tempvar implicit_args = new reduce.ImplicitArgs(syscall_ptr, pedersen_ptr, range_check_ptr)
+
+        # call foreach
+        let (res : felt, updated_implicit_args : felt*) = generic_reduce.reduce(
+            function, array_len, array, 1, implicit_args_len, implicit_args
+        )
+
+        # update implicit arguments
+        let implicit_args = cast(updated_implicit_args, reduce.ImplicitArgs*)
+        let syscall_ptr = implicit_args.syscall_ptr
+        let pedersen_ptr = implicit_args.pedersen_ptr
+        let range_check_ptr = implicit_args.range_check_ptr
+        return (res)
     end
 end
