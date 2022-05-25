@@ -1,9 +1,8 @@
 %lang starknet
 
-from starkware.cairo.common.cairo_builtins import HashBuiltin, BitwiseBuiltin
 from starkware.cairo.common.registers import get_label_location
 from starkware.cairo.common.registers import get_ap
-from starkware.cairo.common.invoke import invoke as invoke_internal
+from starkware.cairo.common.invoke import invoke
 from starkware.cairo.common.memcpy import memcpy
 from starkware.cairo.common.alloc import alloc
 
@@ -55,7 +54,7 @@ namespace internal:
         assert args[implicit_params_len + 1] = cast(array, felt)
 
         # Call the function
-        invoke_internal(func_pc, implicit_params_len + 2, args)
+        invoke(func_pc, implicit_params_len + 2, args)
 
         # Update implicit parameters
         let (ap_val) = get_ap()
