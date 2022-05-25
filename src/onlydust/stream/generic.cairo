@@ -2,8 +2,10 @@
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.registers import get_label_location
+from starkware.cairo.common.alloc import alloc
 from onlydust.stream.internal.foreach import foreach_loop
 from onlydust.stream.internal.reduce import reduce_loop
+from onlydust.stream.internal.filter import filter_loop
 from onlydust.stream.internal.common import new_zero_value
 
 namespace generic:
@@ -57,5 +59,42 @@ namespace generic:
         return reduce_loop(
             func_pc, array_len, array, element_size, implicit_args_len, implicit_args, zero_value
         )
+    end
+
+    # The reduce() method executes a "reducer" callback function on each element of the array.
+    # The callback function must have this signature: func whatever(initial_value : felt, element : felt) -> (res : felt)
+    # Params:
+    #   - function: the function to be executed once for each array element.
+    #   - array_len: length of the array
+    #   - array: the array
+    #   - element_size: size of each element in the array
+    #   - implicit_args_len: length of implicit arguments array
+    #   - implicit_args: implicit arguments array
+    # Returns:
+    #   - the filtered array length
+    #   - the filtered array
+    #   - array of updated implicit arguments
+    func filter(
+        function : codeoffset,
+        array_len : felt,
+        array : felt*,
+        element_size : felt,
+        implicit_args_len : felt,
+        implicit_args : felt*,
+    ) -> (filtered_array_len : felt, filtered_array : felt*, implicit_args : felt*):
+        alloc_locals
+        let (local func_pc) = get_label_location(function)
+        let (filtered_array : felt*) = alloc()
+        let (filtered_array_len : felt, implicit_args : felt*) = filter_loop(
+            func_pc,
+            array_len,
+            array,
+            element_size,
+            implicit_args_len,
+            implicit_args,
+            0,
+            filtered_array,
+        )
+        return (filtered_array_len, filtered_array, implicit_args)
     end
 end
