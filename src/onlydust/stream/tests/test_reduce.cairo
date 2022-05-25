@@ -2,7 +2,7 @@
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
-from onlydust.stream.common_implicits import stream
+from onlydust.stream.default_implementation import stream
 from onlydust.stream.tests.test_helper import sum_from_another_file, my_namespace
 
 @view
@@ -21,7 +21,9 @@ func test_reduce{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_p
     return ()
 end
 
-func sum(initial_value : felt, el : felt) -> (res : felt):
+func sum{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    initial_value : felt, el : felt
+) -> (res : felt):
     let res = initial_value + el
     return (res)
 end
