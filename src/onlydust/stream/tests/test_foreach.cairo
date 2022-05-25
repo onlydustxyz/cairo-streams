@@ -69,14 +69,37 @@ func test_foreach_struct{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range
 end
 
 func inc_counter_foo{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    index : felt, el : felt*
+    index : felt, el : Foo*
 ):
-    let foo : Foo = [cast(el, Foo*)]
-
     let (count_x) = counter_x.read()
-    counter_x.write(count_x + foo.x)
+    counter_x.write(count_x + el.x)
 
     let (count_y) = counter_y.read()
-    counter_y.write(count_y + foo.y)
+    counter_y.write(count_y + el.y)
+    return ()
+end
+
+@view
+func test_foreach_initialize_array{
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}():
+    alloc_locals
+
+    let (local array : felt*) = alloc()
+
+    stream.foreach(init, 4, array)
+
+    assert 0 = array[0]
+    assert 2 = array[1]
+    assert 4 = array[2]
+    assert 6 = array[3]
+
+    return ()
+end
+
+func init{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    index : felt, el : felt*
+):
+    assert [el] = index * 2
     return ()
 end
