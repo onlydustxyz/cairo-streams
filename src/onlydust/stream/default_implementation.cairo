@@ -35,12 +35,12 @@ namespace stream:
         tempvar implicit_args = new foreach_struct.ImplicitArgs(syscall_ptr, pedersen_ptr, range_check_ptr)
 
         # call foreach
-        let (updated_implicit_params : felt*) = generic.foreach(
+        let (updated_implicit_args : felt*) = generic.foreach(
             function, array_len, array, element_size, implicit_args_len, implicit_args
         )
 
         # update implicit arguments
-        let implicit_args = cast(updated_implicit_params, foreach_struct.ImplicitArgs*)
+        let implicit_args = cast(updated_implicit_args, foreach_struct.ImplicitArgs*)
         let syscall_ptr = implicit_args.syscall_ptr
         let pedersen_ptr = implicit_args.pedersen_ptr
         let range_check_ptr = implicit_args.range_check_ptr

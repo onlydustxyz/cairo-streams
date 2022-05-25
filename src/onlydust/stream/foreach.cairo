@@ -13,8 +13,8 @@ namespace generic:
     #   - array_len: length of the array
     #   - array: the array
     #   - element_size: size of each element in the array
-    #   - implicit_params_len: length of implicit arguments array
-    #   - implicit_params: implicit arguments array
+    #   - implicit_args_len: length of implicit arguments array
+    #   - implicit_args: implicit arguments array
     # Returns:
     #   - array of updated implicit arguments
     func foreach(
@@ -22,12 +22,12 @@ namespace generic:
         array_len : felt,
         array : felt*,
         element_size : felt,
-        implicit_params_len : felt,
-        implicit_params : felt*,
-    ) -> (implicit_params : felt*):
+        implicit_args_len : felt,
+        implicit_args : felt*,
+    ) -> (implicit_args : felt*):
         let (func_pc) = get_label_location(function)
         return internal.foreach_loop(
-            func_pc, array_len, array, 0, element_size, implicit_params_len, implicit_params
+            func_pc, array_len, array, 0, element_size, implicit_args_len, implicit_args
         )
     end
 end
@@ -39,26 +39,26 @@ namespace internal:
         array : felt*,
         index : felt,
         element_size : felt,
-        implicit_params_len : felt,
-        implicit_params : felt*,
-    ) -> (implicit_params : felt*):
+        implicit_args_len : felt,
+        implicit_args : felt*,
+    ) -> (implicit_args : felt*):
         alloc_locals
         if index == array_len:
-            return (implicit_params)
+            return (implicit_args)
         end
 
         # Put function arguments in appropriate memory cells
         let (local args : felt*) = alloc()
-        memcpy(args, implicit_params, implicit_params_len)
-        assert args[implicit_params_len] = index
-        assert args[implicit_params_len + 1] = cast(array, felt)
+        memcpy(args, implicit_args, implicit_args_len)
+        assert args[implicit_args_len] = index
+        assert args[implicit_args_len + 1] = cast(array, felt)
 
         # Call the function
-        invoke(func_pc, implicit_params_len + 2, args)
+        invoke(func_pc, implicit_args_len + 2, args)
 
         # Update implicit parameters
         let (ap_val) = get_ap()
-        let implicit_params : felt* = cast(ap_val - implicit_params_len, felt*)
+        let implicit_args : felt* = cast(ap_val - implicit_args_len, felt*)
 
         # Process next element
         return foreach_loop(
@@ -67,8 +67,8 @@ namespace internal:
             array + element_size,
             index + 1,
             element_size,
-            implicit_params_len,
-            implicit_params,
+            implicit_args_len,
+            implicit_args,
         )
     end
 end
