@@ -5,6 +5,10 @@ protostar_version = "0.2.0"
 libs_path = "lib"
 
 ["protostar.contracts"]
-stream = [
-    "./src/onlydust/stream/library.cairo",
+generic = [
+    "./src/onlydust/stream/generic.cairo",
+]
+
+default_implementation = [
+    "./src/onlydust/stream/default_implementation.cairo",
 ]
