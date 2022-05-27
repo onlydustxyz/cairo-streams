@@ -34,7 +34,6 @@ namespace stream:
         let implicit_args_len = foreach_struct.ImplicitArgs.SIZE
         tempvar implicit_args = new foreach_struct.ImplicitArgs(syscall_ptr, pedersen_ptr, range_check_ptr)
 
-        # call foreach
         let (updated_implicit_args : felt*) = generic.foreach(
             function, array_len, array, element_size, implicit_args_len, implicit_args
         )
@@ -65,7 +64,6 @@ namespace stream:
         let implicit_args_len = reduce.ImplicitArgs.SIZE
         tempvar implicit_args = new reduce.ImplicitArgs(syscall_ptr, pedersen_ptr, range_check_ptr)
 
-        # call foreach
         let (res : felt*, updated_implicit_args : felt*) = generic.reduce(
             function, array_len, array, element_size, implicit_args_len, implicit_args
         )
