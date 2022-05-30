@@ -47,7 +47,8 @@ namespace stream:
     end
 
     # The reduce() method executes a "reducer" callback function on each element of the array.
-    # The callback function must have this signature exactly (including implicit params): func whatever(initial_value : felt, el : felt) -> (res : felt)
+    # The callback function must have this signature exactly (including implicit params):
+    #   func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(initial_value : felt, el : felt) -> (res : felt)
     func reduce{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         function : codeoffset, array_len : felt, array : felt*
     ) -> (res : felt):
@@ -55,8 +56,9 @@ namespace stream:
         return ([res])
     end
 
-    # The reduce() method executes a "reducer" callback function on each element of the array.
-    # The callback function must have this signature exactly (including implicit params): func whatever(initial_value : felt, el : felt) -> (res : felt)
+    # The reduce_struct() method executes a "reducer" callback function on each element of the array. Unlike reduce(), the array can be an array of structs.
+    # The callback function must have this signature exactly (including implicit params):
+    #   func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(initial_value : felt*, el : felt*) -> (res : felt*)
     func reduce_struct{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         function : codeoffset, array_len : felt, array : felt*, element_size : felt
     ) -> (res : felt*):
@@ -76,16 +78,19 @@ namespace stream:
         return (res)
     end
 
-    # The reduce() method executes a "reducer" callback function on each element of the array.
-    # The callback function must have this signature exactly (including implicit params): func whatever(initial_value : felt, el : felt) -> (res : felt)
+    # The filter() method executes a "filtering" callback function on each element of the array and keep only the elements that match.
+    # The callback function must have this signature exactly (including implicit params):
+    #   func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(el : felt) -> (keep : felt)
     func filter{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         function : codeoffset, array_len : felt, array : felt*
     ) -> (filtered_array_len : felt, filtered_array : felt*):
         return filter_struct(function, array_len, array, 1)
     end
 
-    # The reduce() method executes a "reducer" callback function on each element of the array.
-    # The callback function must have this signature exactly (including implicit params): func whatever(initial_value : felt, el : felt) -> (res : felt)
+    # The filter_struct() method executes a "filtering" callback function on each element of the array and keep only the elements that match.
+    # Unlike filter(), the array can be an array of structs.
+    # The callback function must have this signature exactly (including implicit params):
+    #   func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(el : felt*) -> (keep : felt)
     func filter_struct{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         function : codeoffset, array_len : felt, array : felt*, element_size : felt
     ) -> (filtered_array_len : felt, filtered_array : felt*):
