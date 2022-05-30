@@ -51,7 +51,7 @@ The foreach() method executes a provided function once for each array element.
 
 Signature: `func foreach(func_label_value : codeoffset, array_len : felt, array : felt*)`.
 
-The provided function must have this signature exactly (including implicit params): `func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(el : felt)`.
+The provided function must have this signature exactly (including implicit params): `func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(el : felt*)`.
 
 Example:
 
@@ -70,7 +70,7 @@ func test_foreach{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_
     return ()
 end
 
-func do_something{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(el : felt):
+func do_something{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(el : felt*):
     ...
     return ()
 end
@@ -84,9 +84,7 @@ The foreach_struct() method executes a provided function once for each array ele
 
 Signature: `func foreach_struct(func_label_value : codeoffset, array_len : felt, array : felt*, element_size : felt)`.
 
-The provided function must have this signature exactly (including implicit params): `func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(el : felt*)`.
-
-To retrieve the array element as a struct inside the provided function, you can do: `let foo : Foo = [cast(el, Foo*)]` (assuming your struct is named Foo).
+The provided function must have this signature exactly (including implicit params): `func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(el : Foo*)` (assuming your struct is named Foo).
 
 Example:
 
@@ -110,8 +108,7 @@ func test_foreach_struct{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range
     return ()
 end
 
-func do_something{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(el : felt*):
-    let foo : Foo = [cast(el, Foo*)]
+func do_something{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(el : Foo*):
     ...
     return ()
 end
@@ -125,7 +122,7 @@ The filter() method executes a "filtering" callback function on each element of 
 
 Signature: `func filter(func_label_value : codeoffset, array_len : felt, array : felt*) -> (filtered_array_len : felt, filtered_array : felt*)`.
 
-The callback function must have this signature exactly (including implicit params): `func whatever{range_check_ptr}(initial_value : felt, el : felt) -> (res : felt)`.
+The callback function must have this signature exactly (including implicit params): `func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(initial_value : felt, el : felt) -> (res : felt)`.
 
 Example:
 
@@ -164,7 +161,7 @@ The reduce() method executes a "reducer" callback function on each element of th
 
 Signature: `func reduce(func_label_value : codeoffset, array_len : felt, array : felt*) -> (res : felt)`.
 
-The callback function must have this signature exactly (including implicit params): `func whatever(initial_value : felt, el : felt) -> (res : felt)`.
+The callback function must have this signature exactly (including implicit params): `func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(initial_value : felt, el : felt) -> (res : felt)`.
 
 Example:
 
