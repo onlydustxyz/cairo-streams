@@ -35,19 +35,12 @@ func filter_loop(
     let (ap_val) = get_ap()
     let implicit_args : felt* = cast(ap_val - implicit_args_len - 1, felt*)
     let keep : felt = [ap_val - 1]
+    with_attr error_message("Expected the filtering callback to return 0 or 1"):
+        assert keep * (1 - keep) = 0
+    end
 
     if keep == 1:
         append_element(new_array, arg_next_element, element_size)
-        return filter_loop(
-            func_pc,
-            array_len - 1,
-            array + element_size,
-            element_size,
-            implicit_args_len,
-            implicit_args,
-            new_array_len + 1,
-            new_array + element_size,
-        )
     end
 
     return filter_loop(
@@ -57,8 +50,8 @@ func filter_loop(
         element_size,
         implicit_args_len,
         implicit_args,
-        new_array_len,
-        new_array,
+        new_array_len + keep,
+        new_array + element_size * keep,
     )
 end
 
