@@ -98,8 +98,9 @@ namespace stream:
         let implicit_args_len = filter_struct.ImplicitArgs.SIZE
         tempvar implicit_args = new filter_struct.ImplicitArgs(syscall_ptr, pedersen_ptr, range_check_ptr)
 
-        let (filtered_array_len : felt, filtered_array : felt*,
-            updated_implicit_args : felt*) = generic.filter(
+        let (
+            filtered_array_len : felt, filtered_array : felt*, updated_implicit_args : felt*
+        ) = generic.filter(
             function, array_len, array, element_size, implicit_args_len, implicit_args
         )
 
