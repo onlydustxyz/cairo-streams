@@ -1,20 +1,18 @@
 <div align="center">
-  <h1 align="center">Cairo Streams</h1>
+  <h1 align="center">Starklings</h1>
   <p align="center">
-    <a href="http://makeapullrequest.com">
-      <img alt="pull requests welcome badge" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat">
+    <a href="https://discord.gg/onlydust">
+        <img src="https://img.shields.io/badge/Discord-6666FF?style=for-the-badge&logo=discord&logoColor=white">
     </a>
     <a href="https://twitter.com/intent/follow?screen_name=onlydust_xyz">
-        <img src="https://img.shields.io/twitter/follow/onlydust_xyz?style=social&logo=twitter"
-            alt="follow on Twitter"></a>
-    <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-green"
-            alt="License"></a>
-    <a href=""><img src="https://img.shields.io/badge/semver-0.0.1-blue"
-            alt="Version"></a>            
+        <img src="https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white">
+    </a>       
   </p>
   
   <h3 align="center">Array stream library written in pure Cairo</h3>
 </div>
+
+---
 
 > ### ⚠️ WARNING! ⚠️
 >
@@ -22,9 +20,8 @@
 > Expect rapid iteration.
 > **Use at your own risk.**
 
-As this library is written in pure Cairo, without hint, you can use it in your StarkNet contracts without any issue.
 
-## Install the library
+## Installation
 
 ### If you are using [Protostar](https://docs.swmansion.com/protostar/)
 
@@ -49,9 +46,15 @@ from onlydust.stream.library import stream
 
 The foreach() method executes a provided function once for each array element.
 
-Signature: `func foreach(func_label_value : codeoffset, array_len : felt, array : felt*)`.
+Signature:
+```cairo
+func foreach(function : codeoffset, array_len : felt, array : felt*)
+```
 
-The provided function must have this signature exactly (including implicit params): `func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(el : felt*)`.
+The provided function must have this signature exactly (including implicit params):
+```cairo
+func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(index : felt, element : felt*)
+```
 
 Example:
 
@@ -70,7 +73,7 @@ func test_foreach{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_
     return ()
 end
 
-func do_something{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(el : felt*):
+func do_something{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(index : felt, el : felt*):
     ...
     return ()
 end
@@ -82,9 +85,15 @@ Look [here](./src/onlydust/stream/tests/test_foreach.cairo) for a full working e
 
 The foreach_struct() method executes a provided function once for each array element. Unlike foreach(), the array can be an array of structs.
 
-Signature: `func foreach_struct(func_label_value : codeoffset, array_len : felt, array : felt*, element_size : felt)`.
+Signature:
+```cairo
+func foreach_struct(function : codeoffset, array_len : felt, array : felt*, element_size : felt)
+```
 
-The provided function must have this signature exactly (including implicit params): `func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(el : Foo*)` (assuming your struct is named Foo).
+Assuming the struct is named `Foo`, the provided function must have this signature exactly (including implicit params):
+```cairo
+func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(index : felt, el : Foo*)
+```
 
 Example:
 
@@ -120,9 +129,15 @@ Look [here](./src/onlydust/stream/tests/test_foreach.cairo) for a full working e
 
 The filter() method executes a "filtering" callback function on each element of the array and keep only the elements that match.
 
-Signature: `func filter(func_label_value : codeoffset, array_len : felt, array : felt*) -> (filtered_array_len : felt, filtered_array : felt*)`.
+Signature:
+```cairo
+func filter(function : codeoffset, array_len : felt, array : felt*) -> (filtered_array_len : felt, filtered_array : felt*)
+```
 
-The callback function must have this signature exactly (including implicit params): `func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(initial_value : felt, el : felt) -> (res : felt)`.
+The callback function must return `0` or `1` and must have this signature exactly (including implicit params):
+```cairo
+func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(el : felt) -> (keep : felt)
+```
 
 Example:
 
@@ -140,15 +155,72 @@ func test_filter{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_p
         keep_even, 4, array
     )
 
-    assert filtered_array_len = 2
-    assert filtered_array[0] = 2
-    assert filtered_array[1] = 8
+    assert 2 = filtered_array_len
+    assert 2 = filtered_array[0]
+    assert 8 = filtered_array[1]
 
     return ()
 end
 
-func keep_even{range_check_ptr}(el : felt) -> (keep : felt):
+func keep_even{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(el : felt) -> (
+    keep : felt
+):
     let (_, rest) = unsigned_div_rem(el, 2)
+    return (1 - rest)
+end
+```
+
+Look [here](./src/onlydust/stream/tests/test_filter.cairo) for a full working example.
+
+
+### filter_struct
+
+The filter_struct() method executes a "filtering" callback function on each element of the array and keep only the elements that match.
+Unlike filter(), the array can be an array of structs.
+
+Signature:
+```cairo
+func filter_struct(function : codeoffset, array_len : felt, array : felt*, element_size : felt) -> (filtered_array_len : felt, filtered_array : felt*)
+```
+
+Assuming the struct is named `Foo`, the callback function must return `0` or `1` and must have this signature exactly (including implicit params):
+```cairo
+func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(el : Foo*) -> (keep : felt)
+```
+
+Example:
+
+```cairo
+struct Foo:
+    member x : felt
+    member y : felt
+end
+
+func test_filter_struct{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():
+    alloc_locals
+
+    let (local array : Foo*) = alloc()
+    assert array[0] = Foo(1, 1)
+    assert array[1] = Foo(1, 0)
+    assert array[2] = Foo(2, 8)
+    assert array[3] = Foo(7, 4)
+
+    let (local filtered_array_len : felt, filtered_array : Foo*) = stream.filter_struct(
+        keep_even_foo, 4, array, Foo.SIZE
+    )
+
+    assert 2 = filtered_array_len
+    assert Foo(1, 1) = filtered_array[0]
+    assert Foo(2, 8) = filtered_array[1]
+
+    return ()
+end
+
+func keep_even_foo{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    el : Foo*
+) -> (keep : felt):
+    tempvar sum = el.x + el.y
+    let (_, rest) = unsigned_div_rem(sum, 2)
     return (1 - rest)
 end
 ```
@@ -159,9 +231,15 @@ Look [here](./src/onlydust/stream/tests/test_filter.cairo) for a full working ex
 
 The reduce() method executes a "reducer" callback function on each element of the array.
 
-Signature: `func reduce(func_label_value : codeoffset, array_len : felt, array : felt*) -> (res : felt)`.
+Signature:
+```cairo
+func reduce(function : codeoffset, array_len : felt, array : felt*) -> (res : felt)
+```
 
-The callback function must have this signature exactly (including implicit params): `func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(initial_value : felt, el : felt) -> (res : felt)`.
+The callback function must have this signature exactly (including implicit params):
+```cairo
+func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(initial_value : felt, el : felt) -> (res : felt)
+```
 
 Example:
 
@@ -178,12 +256,69 @@ func test_reduce{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_p
     let (res) = stream.reduce(sum, 4, array)
     assert res = 10
 
+    # Reading a storage var will fail if builtins haven't been properly updated
+    let (dummy) = dumb.read()
+
     return ()
 end
 
-func sum(initial_value : felt, el : felt) -> (res : felt):
+func sum{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    initial_value : felt, el : felt
+) -> (res : felt):
     let res = initial_value + el
     return (res)
+end
+```
+
+Look [here](./src/onlydust/stream/tests/test_reduce.cairo) for a full working example.
+
+
+### reduce_struct
+
+The reduce_struct() method executes a "reducer" callback function on each element of the array. Unlike reduce(), the array can be an array of structs.
+
+Signature:
+```cairo
+func reduce_struct(function : codeoffset, array_len : felt, array : felt*, element_size : felt) -> (res : felt*)
+```
+
+Assuming the struct is named `Foo`, the callback function must have this signature exactly (including implicit params):
+```cairo
+func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(initial_value : Foo*, element : Foo*) -> (res : Foo*)
+```
+
+Example:
+
+```cairo
+struct Foo:
+    member x : felt
+    member y : felt
+end
+
+func test_reduce_struct{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():
+    alloc_locals
+    let (local array : Foo*) = alloc()
+    assert array[0] = Foo(1, 10)
+    assert array[1] = Foo(1, 10)
+    assert array[2] = Foo(2, 20)
+    assert array[3] = Foo(7, 70)
+
+    let (res : Foo*) = stream.reduce_struct(
+        function=sum_foo, array_len=4, array=array, element_size=Foo.SIZE
+    )
+    assert 11 = res.x
+    assert 110 = res.y
+
+    # Reading a storage var will fail if builtins haven't been properly updated
+    let (dummy) = dumb.read()
+
+    return ()
+end
+
+func sum_foo{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    initial_value : Foo*, element : Foo*
+) -> (res : Foo*):
+    return (new Foo(initial_value.x + element.x, initial_value.y + element.y))
 end
 ```
 
