@@ -4,6 +4,13 @@ protostar_version = "0.2.0"
 ["protostar.project"]
 libs_path = "lib"
 
+["protostar.shared_command_configs"]
+cairo_path = ["src"]
+
+[profile.ci.protostar.shared_command_configs]
+no_color=true
+target="src/onlydust/stream/tests"
+
 ["protostar.contracts"]
 generic = [
     "./src/onlydust/stream/generic.cairo",

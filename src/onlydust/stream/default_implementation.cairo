@@ -98,9 +98,8 @@ namespace stream:
         let implicit_args_len = filter_struct.ImplicitArgs.SIZE
         tempvar implicit_args = new filter_struct.ImplicitArgs(syscall_ptr, pedersen_ptr, range_check_ptr)
 
-        let (
-            filtered_array_len : felt, filtered_array : felt*, updated_implicit_args : felt*
-        ) = generic.filter(
+        let (filtered_array_len : felt, filtered_array : felt*,
+            updated_implicit_args : felt*) = generic.filter(
             function, array_len, array, element_size, implicit_args_len, implicit_args
         )
 
@@ -111,5 +110,38 @@ namespace stream:
         let range_check_ptr = implicit_args.range_check_ptr
 
         return (filtered_array_len, filtered_array)
+    end
+
+    # The map() method executes a "mapping" callback function on each element of the array and store the returned value in-place of the processed element.
+    # The callback function must have this signature exactly (including implicit params):
+    #   func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(value : felt) -> (result : felt)
+    func map{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        function : codeoffset, array_len : felt, array : felt*
+    ) -> (mapped_array : felt*):
+        return map_struct(function, array_len, array, 1)
+    end
+
+    # The map_struct() method executes a "mapping" callback function on each element of the array and store the returned value in-place of the processed element.
+    # Unlike map(), the array can be an array of structs.
+    # The callback function must have this signature exactly (including implicit params):
+    #    func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(value : Foo*) -> (result : Foo*)
+    func map_struct{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        function : codeoffset, array_len : felt, array : felt*, element_size : felt
+    ) -> (mapped_array : felt*):
+        # prepare implicit arguments
+        let implicit_args_len = map_struct.ImplicitArgs.SIZE
+        tempvar implicit_args = new map_struct.ImplicitArgs(syscall_ptr, pedersen_ptr, range_check_ptr)
+
+        let (mapped_array : felt*, updated_implicit_args : felt*) = generic.map(
+            function, array_len, array, element_size, implicit_args_len, implicit_args
+        )
+
+        # update implicit arguments
+        let implicit_args = cast(updated_implicit_args, map_struct.ImplicitArgs*)
+        let syscall_ptr = implicit_args.syscall_ptr
+        let pedersen_ptr = implicit_args.pedersen_ptr
+        let range_check_ptr = implicit_args.range_check_ptr
+
+        return (mapped_array)
     end
 end

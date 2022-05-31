@@ -1,7 +1,7 @@
 .PHONY: build test
 
 build:
-	protostar build --cairo-path=src
+	protostar build
 
 test:
-	protostar test --cairo-path=src src/onlydust/stream/tests/
+	protostar test src/onlydust/stream/tests/
