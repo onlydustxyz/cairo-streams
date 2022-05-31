@@ -227,6 +227,105 @@ end
 
 Look [here](./src/onlydust/stream/tests/test_filter.cairo) for a full working example.
 
+
+### map
+
+The map() method executes a "mapping" callback function on each element of the array and store the returned value in-place of the processed element.
+
+Signature:
+```cairo
+func map(function : codeoffset, array_len : felt, array : felt*) -> (mapped_array : felt*)
+```
+
+The callback function must have this signature exactly (including implicit params):
+```cairo
+func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(value : felt) -> (result : felt)
+```
+
+Example:
+
+```cairo
+func test_map{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():
+    alloc_locals
+
+    let (local array : felt*) = alloc()
+    assert array[0] = 1
+    assert array[1] = 2
+    assert array[2] = 3
+    assert array[3] = 4
+
+    let (array) = stream.map(double, 4, array)
+
+    assert 2 = array[0]
+    assert 4 = array[1]
+    assert 6 = array[2]
+    assert 8 = array[3]
+
+    return ()
+end
+
+func double{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(value : felt) -> (
+    result : felt
+):
+    return (result=value * 2)
+end
+```
+
+Look [here](./src/onlydust/stream/tests/test_map.cairo) for a full working example.
+
+
+### map_struct
+
+The map_struct() method executes a "mapping" callback function on each element of the array and store the returned value in-place of the processed element.
+Unlike map(), the array can be an array of structs.
+
+Signature:
+```cairo
+func map_struct(function : codeoffset, array_len : felt, array : felt*, element_size : felt) -> (mapped_array : felt*)
+```
+
+The callback function must have this signature exactly (including implicit params):
+```cairo
+func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(foo : Foo*) -> (result : Foo*)
+```
+
+Example:
+
+```cairo
+struct Foo:
+    member x : felt
+    member y : felt
+end
+
+func test_map_struct{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():
+    alloc_locals
+
+    let (local array : Foo*) = alloc()
+    assert array[0] = Foo(1, 10)
+    assert array[1] = Foo(2, 20)
+    assert array[2] = Foo(3, 30)
+    assert array[3] = Foo(4, 40)
+
+    let (local array : Foo*) = stream.map_struct(double_foo, 4, array, Foo.SIZE)
+
+    assert Foo(2, 20) = array[0]
+    assert Foo(4, 40) = array[1]
+    assert Foo(6, 60) = array[2]
+    assert Foo(8, 80) = array[3]
+
+    return ()
+end
+
+func double_foo{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(foo : Foo*) -> (
+    result : Foo*
+):
+    return (new Foo(foo.x * 2, foo.y * 2))
+end
+```
+
+Look [here](./src/onlydust/stream/tests/test_map.cairo) for a full working example.
+
+
 ### reduce
 
 The reduce() method executes a "reducer" callback function on each element of the array.
