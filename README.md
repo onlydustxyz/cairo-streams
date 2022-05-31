@@ -56,7 +56,8 @@ The provided function must have this signature exactly (including implicit param
 func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(index : felt, element : felt*)
 ```
 
-Example:
+<details>
+  <summary>Example</summary>
 
 ```cairo
 func test_foreach{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():
@@ -80,6 +81,7 @@ end
 ```
 
 Look [here](./src/onlydust/stream/tests/test_foreach.cairo) for a full working example.
+</details>
 
 ### foreach_struct
 
@@ -95,7 +97,8 @@ Assuming the struct is named `Foo`, the provided function must have this signatu
 func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(index : felt, el : Foo*)
 ```
 
-Example:
+<details>
+  <summary>Example</summary>
 
 ```cairo
 struct Foo:
@@ -124,6 +127,7 @@ end
 ```
 
 Look [here](./src/onlydust/stream/tests/test_foreach.cairo) for a full working example.
+</details>
 
 ### filter
 
@@ -139,7 +143,8 @@ The callback function must return `0` or `1` and must have this signature exactl
 func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(el : felt) -> (keep : felt)
 ```
 
-Example:
+<details>
+  <summary>Example</summary>
 
 ```cairo
 func test_filter{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():
@@ -171,6 +176,7 @@ end
 ```
 
 Look [here](./src/onlydust/stream/tests/test_filter.cairo) for a full working example.
+</details>
 
 
 ### filter_struct
@@ -188,7 +194,8 @@ Assuming the struct is named `Foo`, the callback function must return `0` or `1`
 func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(el : Foo*) -> (keep : felt)
 ```
 
-Example:
+<details>
+  <summary>Example</summary>
 
 ```cairo
 struct Foo:
@@ -226,6 +233,7 @@ end
 ```
 
 Look [here](./src/onlydust/stream/tests/test_filter.cairo) for a full working example.
+</details>
 
 
 ### map
@@ -242,7 +250,8 @@ The callback function must have this signature exactly (including implicit param
 func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(value : felt) -> (result : felt)
 ```
 
-Example:
+<details>
+  <summary>Example</summary>
 
 ```cairo
 func test_map{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():
@@ -272,6 +281,7 @@ end
 ```
 
 Look [here](./src/onlydust/stream/tests/test_map.cairo) for a full working example.
+</details>
 
 
 ### map_struct
@@ -289,7 +299,8 @@ The callback function must have this signature exactly (including implicit param
 func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(foo : Foo*) -> (result : Foo*)
 ```
 
-Example:
+<details>
+  <summary>Example</summary>
 
 ```cairo
 struct Foo:
@@ -324,6 +335,7 @@ end
 ```
 
 Look [here](./src/onlydust/stream/tests/test_map.cairo) for a full working example.
+</details>
 
 
 ### reduce
@@ -340,7 +352,8 @@ The callback function must have this signature exactly (including implicit param
 func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(initial_value : felt, el : felt) -> (res : felt)
 ```
 
-Example:
+<details>
+  <summary>Example</summary>
 
 ```cairo
 func test_reduce{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():
@@ -370,6 +383,7 @@ end
 ```
 
 Look [here](./src/onlydust/stream/tests/test_reduce.cairo) for a full working example.
+</details>
 
 
 ### reduce_struct
@@ -386,7 +400,8 @@ Assuming the struct is named `Foo`, the callback function must have this signatu
 func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(initial_value : Foo*, element : Foo*) -> (res : Foo*)
 ```
 
-Example:
+<details>
+  <summary>Example</summary>
 
 ```cairo
 struct Foo:
@@ -422,3 +437,4 @@ end
 ```
 
 Look [here](./src/onlydust/stream/tests/test_reduce.cairo) for a full working example.
+</details>
