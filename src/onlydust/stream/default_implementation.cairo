@@ -89,7 +89,7 @@ namespace stream:
 
     # The filter_struct() method executes a "filtering" callback function on each element of the array and keep only the elements that match.
     # Unlike filter(), the array can be an array of structs.
-    # The callbafilterck function must have this signature exactly (including implicit params):
+    # The callback function must have this signature exactly (including implicit params):
     #   func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(el : felt*) -> (keep : felt)
     func filter_struct{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         function : codeoffset, array_len : felt, array : felt*, element_size : felt
