@@ -1,5 +1,5 @@
 <div align="center">
-  <h1 align="center">Starklings</h1>
+  <h1 align="center">Cairo Streams</h1>
   <p align="center">
     <a href="https://discord.gg/onlydust">
         <img src="https://img.shields.io/badge/Discord-6666FF?style=for-the-badge&logo=discord&logoColor=white">
