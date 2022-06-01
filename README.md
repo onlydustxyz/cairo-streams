@@ -31,16 +31,19 @@ protostar install https://github.com/onlydustxyz/cairo-streams
 
 ### If you are using [StarkNet with a Python env](https://starknet.io/docs/quickstart.html) or [Nile](https://github.com/OpenZeppelin/nile)
 
-Coming soon. A pip package will be created for your convenience, so you will be able to install it with `pip install`.
-
+```bash
+pip install onlydust-cairo-streams
+```
 
 ## Usage
 
 To import the library in a cairo file, add this line:
 
 ```cairo
-from onlydust.stream.library import stream
+from onlydust.stream.default_implementation import stream
 ```
+
+## Default implementations
 
 ### foreach
 
@@ -438,3 +441,14 @@ end
 
 Look [here](./src/onlydust/stream/tests/test_reduce.cairo) for a full working example.
 </details>
+
+
+## Custom implementations
+
+You can implement your own functions, with custom implicit arguments, using the generic functions provided by the library:
+
+```cairo
+from onlydust.stream.generic import generic
+```
+
+To see implementation examples, the best is to look at the [default implementations](./src/onlydust/stream/default_implementation.cairo).
