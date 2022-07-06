@@ -6,7 +6,7 @@ from starkware.cairo.common.memcpy import memcpy
 from starkware.cairo.common.alloc import alloc
 
 func foreach_loop(
-    func_pc : felt,
+    func_pc : felt*,
     array_len : felt,
     array : felt*,
     index : felt,
