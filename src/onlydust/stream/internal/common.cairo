@@ -17,7 +17,7 @@ end
 # Returns the result at ap_val-1 as a felt*
 #    - if size == 1, the result is a felt, returns the pointer to its value
 #    - if size > 1, the result is a struct, returns the value itself (it's already a pointer)
-func retrieve_result(ap_val : felt, size : felt) -> (result : felt*):
+func retrieve_result(ap_val : felt*, size : felt) -> (result : felt*):
     if size == 1:
         return (result=cast(ap_val - 1, felt*))
     end

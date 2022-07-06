@@ -8,7 +8,7 @@ from starkware.cairo.common.alloc import alloc
 from onlydust.stream.internal.common import prepare_argument, retrieve_result, new_zero_value
 
 func reduce_loop(
-    func_pc : felt,
+    func_pc : felt*,
     array_len : felt,
     array : felt*,
     element_size : felt,
