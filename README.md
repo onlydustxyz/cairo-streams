@@ -442,6 +442,120 @@ end
 Look [here](./src/onlydust/stream/tests/test_reduce.cairo) for a full working example.
 </details>
 
+### some
+
+The some() method executes a function on each element and returns true if any element on the array returns true.
+
+Signature:
+
+```cairo
+func some(function : codeoffset, array_len : felt, array : felt*) -> (res : felt)
+```
+
+The callback function must have this signature exactly (including implicit params):
+
+```cairo
+func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(index : felt, el : felt) -> (res : felt)
+```
+
+<details>
+  <summary>Example</summary>
+
+```cairo
+func test_some{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():
+    alloc_locals
+
+    let (local array : felt*) = alloc()
+    assert array[0] = 0
+    assert array[1] = 2
+    assert array[2] = 1
+    assert array[3] = 7
+
+    let (res) = stream.some(is_one, 4, array)
+    assert res = TRUE
+
+    # Reading a storage var will fail if builtins haven't been properly updated
+    let (dummy) = dumb.read()
+
+    return ()
+end
+
+func is_one{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    index : felt, el : felt
+) -> (res : felt):
+    if el == 1:
+        return (TRUE)
+    end
+    return (FALSE)
+end
+```
+
+Look [here](./src/onlydust/stream/tests/test_some.cairo) for a full working example.
+
+</details>
+
+### some_struct
+
+The some_struct() method executes a function on each element and returns true if any element on the array returns true. Unlike some(), the array can be an array of structs.
+
+Signature:
+
+```cairo
+func some_struct(function : codeoffset, array_len : felt, array : felt*, element_size : felt) -> (res : felt*)
+```
+
+Assuming the struct is named `Foo`, the callback function must have this signature exactly (including implicit params):
+
+```cairo
+func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(index : felt, element : Foo*) -> (res : felt)
+```
+
+And res should be `0` or `1`, `0` representing false, `1` true. Alternatively you can use the constants defined in the standard library.
+
+<details>
+  <summary>Example</summary>
+
+```cairo
+struct Foo:
+    member x : felt
+    member y : felt
+end
+
+func test_some_struct{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():
+    alloc_locals
+    let (local array : Foo*) = alloc()
+    assert array[0] = Foo(0, 10)
+    assert array[1] = Foo(1, 10)
+    assert array[2] = Foo(2, 20)
+    assert array[3] = Foo(7, 70)
+
+    let (res : felt) = stream.some_struct(
+        function=is_one_foo, array_len=4, array=array, element_size=Foo.SIZE
+    )
+    assert res = TRUE
+
+    # Reading a storage var will fail if builtins haven't been properly updated
+    let (dummy) = dumb.read()
+
+    return ()
+end
+
+func is_one_foo{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    index : Foo*, element : Foo*
+) -> (res : felt):
+    if element.x == 1:
+        return (TRUE)
+    end
+    if element.y == 1:
+        return (TRUE)
+    end
+    return (FALSE)
+end
+```
+
+Look [here](./src/onlydust/stream/tests/test_some.cairo) for a full working example.
+
+</details>
 
 ## Custom implementations
 

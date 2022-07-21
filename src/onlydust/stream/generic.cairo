@@ -3,10 +3,12 @@
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.registers import get_label_location
 from starkware.cairo.common.alloc import alloc
+from starkware.cairo.common.bool import FALSE
 from onlydust.stream.internal.foreach import foreach_loop
 from onlydust.stream.internal.reduce import reduce_loop
 from onlydust.stream.internal.filter import filter_loop
 from onlydust.stream.internal.map import map_loop
+from onlydust.stream.internal.some import some_loop
 from onlydust.stream.internal.common import new_zero_value
 
 namespace generic:
@@ -125,5 +127,32 @@ namespace generic:
             func_pc, array_len, array, element_size, implicit_args_len, implicit_args, mapped_array
         )
         return (mapped_array, implicit_args)
+    end
+
+    # The some() method executes a function on each element and returns true if any element on the array returns true.
+    # The callback function must have this signature: func whatever(index : felt, element : felt) -> (res : felt)
+    # Params:
+    #   - function: the function to be used to check each array element.
+    #   - array_len: length of the array
+    #   - array: the array
+    #   - element_size: size of each element in the array
+    #   - implicit_args_len: length of implicit arguments array
+    #   - implicit_args: implicit arguments array
+    # Returns:
+    #   - the result, as a felt (it's 1 or 0, true or false)
+    #   - array of updated implicit arguments
+    func some(
+        function : codeoffset,
+        array_len : felt,
+        array : felt*,
+        element_size : felt,
+        implicit_args_len : felt,
+        implicit_args : felt*,
+    ) -> (res : felt, implicit_args : felt*):
+        alloc_locals
+        let (local func_pc) = get_label_location(function)
+        return some_loop(
+            func_pc, array_len, array, element_size, implicit_args_len, implicit_args, FALSE
+        )
     end
 end
