@@ -145,4 +145,36 @@ namespace stream:
 
         return (mapped_array)
     end
+
+    # The some() method executes a function on each element and returns true if any element on the array returns true.
+    # The callback function must have this signature exactly (including implicit params):
+    #   func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(index : felt, el : felt) -> (res : felt)
+    func some{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        function : codeoffset, array_len : felt, array : felt*
+    ) -> (res : felt):
+        let (res : felt) = some_struct(function, array_len, array, 1)
+        return (res)
+    end
+
+    # The some_struct() method executes a function on each element and returns true if any element on the array returns true. Unlike some(), the array can be an array of structs.
+    # The callback function must have this signature exactly (including implicit params):
+    #   func whatever{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(index : felt*, el : felt*) -> (res : felt*)
+    func some_struct{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        function : codeoffset, array_len : felt, array : felt*, element_size : felt
+    ) -> (res : felt):
+        # prepare implicit arguments
+        let implicit_args_len = some_struct.ImplicitArgs.SIZE
+        tempvar implicit_args = new some_struct.ImplicitArgs(syscall_ptr, pedersen_ptr, range_check_ptr)
+
+        let (res : felt, updated_implicit_args : felt*) = generic.some(
+            function, array_len, array, element_size, implicit_args_len, implicit_args
+        )
+
+        # update implicit arguments
+        let implicit_args = cast(updated_implicit_args, some_struct.ImplicitArgs*)
+        let syscall_ptr = implicit_args.syscall_ptr
+        let pedersen_ptr = implicit_args.pedersen_ptr
+        let range_check_ptr = implicit_args.range_check_ptr
+        return (res)
+    end
 end
