@@ -1,6 +1,7 @@
 name: Tests
 
-on: push
+on:
+  pull_request: ~
 
 jobs:
   protostar-tests:
@@ -9,7 +10,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install protostar
         run: |
-          curl -L https://raw.githubusercontent.com/software-mansion/protostar/master/install.sh | bash
+          curl -L https://raw.githubusercontent.com/software-mansion/protostar/master/install.sh | bash -s -- -v 0.4.2
       - name: Update env variables
         run: |
           source /home/runner/.bashrc | bash

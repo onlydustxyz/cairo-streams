@@ -1,6 +1,7 @@
 name: Formatting
 
-on: push
+on:
+  pull_request: ~
 
 jobs:
   cairo:
@@ -11,6 +12,6 @@ jobs:
         with:
           python-version: "3.9"
       - name: Install dependencies
-        run: pip install cairo-lang==0.8.2.1
+        run: pip install cairo-lang==0.10.0
       - name: Check files formatting
         run: cairo-format -c src/onlydust/stream/**/*.cairo src/onlydust/stream/*.cairo
