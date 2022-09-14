@@ -5,101 +5,100 @@ from starkware.cairo.common.alloc import alloc
 from onlydust.stream.default_implementation import stream
 
 @storage_var
-func counter() -> (count : felt):
-end
+func counter() -> (count: felt) {
+}
 
 @storage_var
-func counter_x() -> (count : felt):
-end
+func counter_x() -> (count: felt) {
+}
 
 @storage_var
-func counter_y() -> (count : felt):
-end
+func counter_y() -> (count: felt) {
+}
 
 @view
-func test_foreach{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():
-    alloc_locals
+func test_foreach{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
+    alloc_locals;
 
-    let (local array : felt*) = alloc()
-    assert array[0] = 1
-    assert array[1] = 1
-    assert array[2] = 1
-    assert array[3] = 7
+    let (local array: felt*) = alloc();
+    assert array[0] = 1;
+    assert array[1] = 1;
+    assert array[2] = 1;
+    assert array[3] = 7;
 
-    stream.foreach(inc_counter, 4, array)
+    stream.foreach(inc_counter, 4, array);
 
-    let (count) = counter.read()
-    assert count = 10
+    let (count) = counter.read();
+    assert count = 10;
 
-    return ()
-end
+    return ();
+}
 
-func inc_counter{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    index : felt, el : felt*
-):
-    let (count) = counter.read()
-    counter.write(count + [el])
-    return ()
-end
+func inc_counter{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    index: felt, el: felt*
+) {
+    let (count) = counter.read();
+    counter.write(count + [el]);
+    return ();
+}
 
-struct Foo:
-    member x : felt
-    member y : felt
-end
-
-@view
-func test_foreach_struct{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():
-    alloc_locals
-
-    let (local array : Foo*) = alloc()
-    assert array[0] = Foo(1, 10)
-    assert array[1] = Foo(1, 10)
-    assert array[2] = Foo(2, 20)
-    assert array[3] = Foo(7, 70)
-
-    stream.foreach_struct(function=inc_counter_foo, array_len=4, array=array, element_size=Foo.SIZE)
-
-    let (count_x) = counter_x.read()
-    assert count_x = 11
-
-    let (count_y) = counter_y.read()
-    assert count_y = 110
-
-    return ()
-end
-
-func inc_counter_foo{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    index : felt, el : Foo*
-):
-    let (count_x) = counter_x.read()
-    counter_x.write(count_x + el.x)
-
-    let (count_y) = counter_y.read()
-    counter_y.write(count_y + el.y)
-    return ()
-end
+struct Foo {
+    x: felt,
+    y: felt,
+}
 
 @view
-func test_foreach_initialize_array{
-    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-}():
-    alloc_locals
+func test_foreach_struct{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
+    alloc_locals;
 
-    let (local array : felt*) = alloc()
+    let (local array: Foo*) = alloc();
+    assert array[0] = Foo(1, 10);
+    assert array[1] = Foo(1, 10);
+    assert array[2] = Foo(2, 20);
+    assert array[3] = Foo(7, 70);
 
-    stream.foreach(init, 4, array)
+    stream.foreach_struct(
+        function=inc_counter_foo, array_len=4, array=array, element_size=Foo.SIZE
+    );
 
-    assert 0 = array[0]
-    assert 2 = array[1]
-    assert 4 = array[2]
-    assert 6 = array[3]
+    let (count_x) = counter_x.read();
+    assert count_x = 11;
 
-    return ()
-end
+    let (count_y) = counter_y.read();
+    assert count_y = 110;
 
-func init{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    index : felt, el : felt*
-):
-    assert [el] = index * 2
-    return ()
-end
+    return ();
+}
+
+func inc_counter_foo{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    index: felt, el: Foo*
+) {
+    let (count_x) = counter_x.read();
+    counter_x.write(count_x + el.x);
+
+    let (count_y) = counter_y.read();
+    counter_y.write(count_y + el.y);
+    return ();
+}
+
+@view
+func test_foreach_initialize_array{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    ) {
+    alloc_locals;
+
+    let (local array: felt*) = alloc();
+
+    stream.foreach(init, 4, array);
+
+    assert 0 = array[0];
+    assert 2 = array[1];
+    assert 4 = array[2];
+    assert 6 = array[3];
+
+    return ();
+}
+
+func init{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(index: felt, el: felt*) {
+    assert [el] = index * 2;
+    return ();
+}

@@ -2,31 +2,31 @@
 
 from onlydust.stream.internal.common import new_zero_value
 
-struct Foo:
-    member x : felt
-    member y : felt
-end
+struct Foo {
+    x: felt,
+    y: felt,
+}
 
 @view
-func test_new_zero_value_struct():
-    let (value : felt*) = new_zero_value(Foo.SIZE)
-    assert 0 = value[0]
-    assert 0 = value[1]
+func test_new_zero_value_struct() {
+    let (value: felt*) = new_zero_value(Foo.SIZE);
+    assert 0 = value[0];
+    assert 0 = value[1];
 
-    let foo : Foo* = cast(value, Foo*)
-    assert 0 = foo.x
-    assert 0 = foo.y
+    let foo: Foo* = cast(value, Foo*);
+    assert 0 = foo.x;
+    assert 0 = foo.y;
 
-    return ()
-end
+    return ();
+}
 
 @view
-func test_new_zero_value_felt():
-    let (value : felt*) = new_zero_value(1)
-    assert 0 = value[0]
+func test_new_zero_value_felt() {
+    let (value: felt*) = new_zero_value(1);
+    assert 0 = value[0];
 
-    let val : felt = [value]
-    assert 0 = val
+    let val: felt = [value];
+    assert 0 = val;
 
-    return ()
-end
+    return ();
+}

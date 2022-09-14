@@ -2,18 +2,18 @@
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 
-func sum_from_another_file{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    initial_value : felt, el : felt
-) -> (res : felt):
-    let res = initial_value + el
-    return (res)
-end
+func sum_from_another_file{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    initial_value: felt, el: felt
+) -> (res: felt) {
+    let res = initial_value + el;
+    return (res,);
+}
 
-namespace my_namespace:
+namespace my_namespace {
     func sum_from_another_namespace{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-    }(initial_value : felt, el : felt) -> (res : felt):
-        let res = initial_value + el
-        return (res)
-    end
-end
+        syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+    }(initial_value: felt, el: felt) -> (res: felt) {
+        let res = initial_value + el;
+        return (res,);
+    }
+}
